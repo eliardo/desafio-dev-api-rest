@@ -104,3 +104,9 @@ POST /api/v1/user
 GET /api/v1/user
 
 ```
+
+
+### Banco de dados
+Banco de dados utilizado é foi MYSQL.
+
+**Scripts de criação de tabelas disponível em app/scripts/db.sql**
