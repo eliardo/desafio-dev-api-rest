@@ -21,7 +21,7 @@ Swagger implementado e disponível em /index
 Tabela Accounts
 
     | Campos | Tipo | descrição |
-    |-|-|-|
+    |---|---|---|
     | accountId | Numérico | Id da conta gerado automaticamente |
     | userId | Numérico | Id da pessoa, chave estrangeira da tabela Users |
     | balance | Monetário | Saldo da conta |
@@ -78,7 +78,7 @@ GET /api/v1/account/balance/{accountId}
 Tabela Users
 
     | Campos | Tipo | Descrição |
-    |-|-|-|
+    |---|---|---|
     | userId | Numérico | Id da pessoa, gerado automaticamente |
     | name | Texto | nome da pessoa |
     | cpf | Texto | CPF da pessoa |
