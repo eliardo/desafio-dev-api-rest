@@ -1,0 +1,368 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "desafio-dev-api-rest",
+        "description": "API gerencia de pessoas, contas e transações.",
+        "license": {}
+    },
+    "host": "localhost:3000",
+    "basePath": "/api/v1",
+    "tags": [
+        {
+            "name": "Account manager",
+            "description": "Create accounts, disable and update account's balance. By now is possible create users and list all users (double responsibilities)"
+        }
+    ],
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/users": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create new user in system",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "body",
+                        "description": "User that we want to create",
+                        "schema": {
+                            "$ref": "#/definitions/NewUser"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "New user is created",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get all users in system",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Users"
+                        }
+                    }
+                }
+            }
+        },
+        "/account": {
+            "parameters": [
+                
+            ],
+            "post": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Create new account in system",
+                "parameters": [
+                    {
+                        "name": "account",
+                        "in": "body",
+                        "description": "Account that we want to create",
+                        "schema": {
+                            "$ref": "#/definitions/NewAccount"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "New account is created",
+                        "schema": {
+                            "$ref": "#/definitions/Account"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Generic Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/{accountId}": {
+            "parameters": [
+                {
+                    "name": "accountId",
+                    "in": "path",
+                    "required": true,
+                    "description": "AccountId of account that we want active/disable",
+                    "type": "string"
+                }
+            ],
+            "put": {
+                "summary": "Active/disable account with give ID",
+                "tags": [
+                    "Account"
+                ],
+                "parameters": [
+                    {
+                        "name": "active",
+                        "in": "body",
+                        "description": "Flag active with value boolean",
+                        "schema": {
+                            "$ref": "#/definitions/Active"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/ActiveSuccess"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Generic Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/balance/{accountId}": {
+            "parameters": [
+                {
+                    "name": "accountId",
+                    "in": "path",
+                    "required": true,
+                    "description": "AccountId of account that we want to get the balance",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Get balance with given AccountId",
+                "responses": {
+                    "200": {
+                        "description": "Balance is found",
+                        "schema": {
+                            "$ref": "#/definitions/Balance"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Account not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Generic Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Account": {
+            "required": [
+                "accountId",
+                "userId",
+                "balance",
+                "dailyLimit",
+                "active",
+                "type",
+                "creationDate"
+            ],
+            "properties": {
+                "accountId": {
+                    "type": "integer"
+                },
+                "userId": {
+                    "type": "integer"
+                },
+                "balance": {
+                    "type": "integer",
+                    "format": "double"
+                },
+                "dailyLimit": {
+                    "type": "integer",
+                    "format": "double"
+                },
+                "active": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "type": "integer"
+                },
+                "creationDate": {
+                    "type": "string",
+                    "format": "date"
+                }
+            }
+        },
+        "NewAccount": {
+            "required": [
+                "userId",
+                "balance",
+                "dailyLimit",
+                "active",
+                "type"
+            ],
+            "properties": {
+                "userId": {
+                    "type": "integer"
+                },
+                "balance": {
+                    "type": "integer",
+                    "format": "double"
+                },
+                "dailyLimit": {
+                    "type": "integer",
+                    "format": "double"
+                },
+                "active": {
+                    "type": "boolean"
+                },
+                "type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "Balance": {
+            "properties": {
+                "balance": {
+                    "type": "integer",
+                    "format": "double"
+                }
+            }
+        },
+        "NewUser": {
+            "required": [
+                "name",
+                "cpf",
+                "birthday"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "cpf": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "string",
+                    "format": "date"
+                }
+            }
+        },
+        "User": {
+            "required": [
+                "userId",
+                "name",
+                "cpf",
+                "birthday"
+            ],
+            "properties": {
+                "userId": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "cpf": {
+                    "type": "string"
+                },
+                "birthday": {
+                    "type": "string",
+                    "format": "date"
+                }
+            }
+        },
+        "Users": {
+            "type": "array",
+            "$ref": "#/definitions/User"
+        },
+        "Active": {
+            "properties": {
+                "active": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "ActiveSuccess": {
+            "properties": {
+                "accountId": {
+                    "type": "integer"
+                },
+                "active": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "Error": {
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
