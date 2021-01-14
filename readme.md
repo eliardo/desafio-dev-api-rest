@@ -20,11 +20,11 @@ Swagger implementado e disponível em /index
 
 Tabela Accounts
 
-    | Campos | Tipo | descrição
+    | Campos | Tipo | descrição |
     |-|-|-|
     | accountId | Numérico | Id da conta gerado automaticamente |
     | userId | Numérico | Id da pessoa, chave estrangeira da tabela Users |
-    | balance | Monetário | Saldo da conta|
+    | balance | Monetário | Saldo da conta |
     | dailyLimit | Monetário | limite de saque diario |
     | active | Condicional | flag ativo, identifica se a conta está bloqueada ou ativa |
     | type | Numérido | tipo da conta |
