@@ -20,15 +20,15 @@ Swagger implementado e disponível em /index
 
 Tabela Accounts
 
-    | Campos | Tipo | descrição |
-    |---|---|---|
-    | accountId | Numérico | Id da conta gerado automaticamente |
-    | userId | Numérico | Id da pessoa, chave estrangeira da tabela Users |
-    | balance | Monetário | Saldo da conta |
-    | dailyLimit | Monetário | limite de saque diario |
-    | active | Condicional | flag ativo, identifica se a conta está bloqueada ou ativa |
-    | type | Numérido | tipo da conta |
-    | creationDate | Data | data criacao da conta (identificada automaticamente) |
+    | Campos       | Tipo        | Descrição                                                 |
+    | ---          | ---         | ---                                                       |
+    | accountId    | Numérico    | Id da conta gerado automaticamente                        |
+    | userId       | Numérico    | Id da pessoa, chave estrangeira da tabela Users           |
+    | balance      | Monetário   | Saldo da conta                                            |
+    | dailyLimit   | Monetário   | limite de saque diario                                    |
+    | active       | Condicional | Flag ativo, identifica se a conta está bloqueada ou ativa |
+    | type         | Numérido    | Tipo da conta                                             |
+    | creationDate | Data        | Data criacao da conta (identificada automaticamente)      |
 
 
 ### Criar contas
@@ -77,12 +77,12 @@ GET /api/v1/account/balance/{accountId}
 
 Tabela Users
 
-    | Campos | Tipo | Descrição |
-    |---|---|---|
-    | userId | Numérico | Id da pessoa, gerado automaticamente |
-    | name | Texto | nome da pessoa |
-    | cpf | Texto | CPF da pessoa |
-    | birthday | Data | Data de nascimento |
+    | Campos   | Tipo     | Descrição                            |
+    | ---      | ---      | ---                                  |
+    | userId   | Numérico | Id da pessoa, gerado automaticamente |
+    | name     | Texto    | Nome da pessoa                       |
+    | cpf      | Texto    | CPF da pessoa                        |
+    | birthday | Data     | Data de nascimento                   |
 
 
 ### Criar pessoa
