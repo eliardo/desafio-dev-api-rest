@@ -1,79 +1,106 @@
 
-### Desafio
-Olá, queremos convidá-lo(a) a participar do nosso desafio de seleção.  Pronto(a) para participar? Seu trabalho será visto pelo nosso time e você receberá um feedback ao final sobre o que achamos do seu trabalho. Não é legal?
+## Project setup
+```
+npm install
+```
 
-### Sobre a oportunidade 
-A vaga é para Desenvolvedor(a), temos vagas com diversos níveis de senioridade e para cada um deles utilizaremos critérios específicos considerando este aspecto, combinado? 
-Se você for aprovad(a) nesta etapa, será convidado para uma entrevista final.
+### Run
+```
+node server.js
+```
 
-### Desafio Técnico
-  Nós trabalhamos com meios de pagamento e nada melhor do que um bom sistema para gestão de contas:
-  
-  - Pré-requisitos:
-    ```
-    * Desenvolver os recursos em API Rest que realizam operações bancárias com a entidade conta a seguir:
-    ```
-    | Contas | Tipo |
-    |-|-|
-    | idConta | Numérico |
-    | idPessoa | Numérico |
-    | saldo | Monetário |
-    | limiteSaqueDiario | Monetário |
-    | flagAtivo | Condicional |
-    | tipoConta | Numérido |
-    | dataCriacao | Data |
+### Descrição
+Serviço responsável por gerenciar contas, possibilitando criar contas, bloquear contas, realizar saques depósitos e obter extratos. 
+Atualmente possuí também as funcionalidades de criar pessoa e listar todas as pessoas (funcionalidade que deve ser removida para na causar dupla responsabilidade)
 
-    ```
-    * Tabela de transações realizadas na conta
-    ```
-    | Transacoes | Tipo |
-    |-|-|
-    | idTransacao | Numérico |
-    | idConta | Numérico |
-    | valor | Monetário |
-    | dataTransacao | Data |
+## Swagger
+Swagger implementado e disponível em /index
 
-    ```
-    * P.S.: Não é necessário realizar operações com a tabela pessoa, mas é necessária a criação da tabela para mapeamento da relação com a conta e enviar script de criação de pelo menos uma pessoa.
-    ```
+## Contas
 
-    | Pessoas | Tipo |
-    |-|-|
-    | idPessoa | Numérico |
-    | nome | Texto |
-    | cpf | Texto |
-    | dataNascimento | Data |    
+Tabela Accounts
 
-  - O que esperamos como escopo mínimo:
-    ```
-    * Implementar path que realiza a criação de uma conta;
-    * Implementar path que realiza operação de depósito em uma conta;
-    * Implementar path que realiza operação de consulta de saldo em determinada conta;
-    * Implementar path que realiza operação de saque em uma conta;
-    * Implementar path que realiza o bloqueio de uma conta;
-    * Implementar path que recupera o extrato de transações de uma conta;
-    ```
-  - O que será diferencial:
-    ```
-    * Implementar extrato por período;
-    * Elaborar manual de execução;
-    * Elaborar documentação;
-    * Elaborar testes.
-    ```
-    
-  - O que vamos avaliar:
-    ```
-    * Seu código; 
-    * Script de banco;
-    * Organização;
-    * Boas práticas;
-    * Diferenciais;    
-    ```
+    | Campos | Tipo | descrição
+    |-|-|-|
+    | accountId | Numérico | Id da conta gerado automaticamente |
+    | userId | Numérico | Id da pessoa, chave estrangeira da tabela Users |
+    | balance | Monetário | Saldo da conta|
+    | dailyLimit | Monetário | limite de saque diario |
+    | active | Condicional | flag ativo, identifica se a conta está bloqueada ou ativa |
+    | type | Numérido | tipo da conta |
+    | creationDate | Data | data criacao da conta (identificada automaticamente) |
 
 
-### Instruções
-      1. Faça o fork do desafio;
-      2. Crie um repositório privado no seu github para o projeto e adicione como colaborador o usuário wesleyjoliveira;
-      3. Desenvolva. Você terá 7 (sete) dias a partir da data do envio do desafio; 
-      4. Após concluir seu trabalho faça um push; 
-      5. Envie um e-mail à pessoa que está mantendo o contato com você durante o processo notificando a finalização do desafio para validação.
+### Criar contas
+```
+POST /api/v1/account
+
+{
+  "userId": 1,
+  "balance": 0,
+  "dailyLimit": 1000,
+  "active": true,
+  "type": 0
+}
+
+
+```
+
+
+### Bloquear / Ativar conta
+```
+PUT /api/v1/account/{accountId}
+
+{
+  "active": true or false
+}
+
+```
+
+
+### Consultar saldo
+```
+GET /api/v1/account/balance/{accountId}
+
+```
+
+### Saques de uma conta
+#todo
+
+### Depositos de uma conta
+#todo
+
+### Extratos
+#todo
+
+## Pessoas
+
+Tabela Users
+
+    | Campos | Tipo | Descrição |
+    |-|-|-|
+    | userId | Numérico | Id da pessoa, gerado automaticamente |
+    | name | Texto | nome da pessoa |
+    | cpf | Texto | CPF da pessoa |
+    | birthday | Data | Data de nascimento |
+
+
+### Criar pessoa
+```
+POST /api/v1/user
+
+{
+  "name": "teste",
+  "cpf": "01224422",
+  "birthday" : "1990/12/01"
+}
+
+
+```
+
+
+### Listar todas pessoas cadastradas
+```
+GET /api/v1/user
+
+```
