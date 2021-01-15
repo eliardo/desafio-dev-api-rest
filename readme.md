@@ -10,11 +10,12 @@ node server.js
 ```
 
 ### Descrição
-Serviço responsável por gerenciar contas, possibilitando criar contas, bloquear contas, realizar saques depósitos e obter extratos. 
+Serviço responsável por gerenciar contas, possibilitando criar contas, bloquear contas, realizar saques depósitos e obter extratos. <br />
 Atualmente possuí também as funcionalidades de criar pessoa e listar todas as pessoas (funcionalidade que deve ser removida para na causar dupla responsabilidade)
 
 ## Swagger
-Swagger implementado e disponível em /index
+Swagger implementado e disponível em /index<br />
+Acesse /index e terá de maneira visual os endpoints disponíveis na API, cada um com seus requests e possíveis responses
 
 ## Contas
 
@@ -37,7 +38,7 @@ POST /api/v1/account
 
 {
   "userId": 1,
-  "balance": 0,
+  "balance": 100.90,
   "dailyLimit": 1000,
   "active": true,
   "type": 0
@@ -46,6 +47,18 @@ POST /api/v1/account
 
 ```
 
+**Response**
+```
+{
+    "id": 1,
+    "userId": 1,
+    "balance": 100.90,
+    "dailyLimit": 1000,
+    "active": true,
+    "type": 1,
+    "creationDate": "2021-01-15"
+}
+```
 
 ### Bloquear / Ativar conta
 ```
@@ -56,7 +69,15 @@ PUT /api/v1/account/{accountId}
 }
 
 ```
+Envie active true para ativar a conta, ou active false para bloquear a conta
 
+**Response**
+```
+{
+    "accountId": "3",
+    "active": true
+}
+```
 
 ### Consultar saldo
 ```
@@ -64,14 +85,65 @@ GET /api/v1/account/balance/{accountId}
 
 ```
 
-### Saques de uma conta
-#todo
+**Response**
+```
+{
+    "balance": 200.9
+}
+```
 
-### Depositos de uma conta
-#todo
+
+### Transações Saques e Depósitos de uma conta
+```
+POST /api/v1/account/transaction
+
+Depósito
+{
+    "accountId": 1,
+    "value": 100
+}
+
+Saque
+{
+    "accountId": 1,
+    "value": -100
+}
+
+```
+Envie um valor positivo na propriedade value para realizar um depósito, ou envie um valor negativo para realizar um saque.
+
+**Response**
+```
+{
+    "accountId": 1,
+    "balance": 101.9
+}
+```
 
 ### Extratos
-#todo
+```
+GET /api/v1/account/transaction/{accountId}
+```
+
+**Response**
+```
+[
+    {
+        "transactionId": 1,
+        "accountId": 1,
+        "value": 100,
+        "transactionDate": "2021-01-15"
+    },
+    {
+        "transactionId": 2,
+        "accountId": 1,
+        "value": -50,
+        "transactionDate": "2021-01-15"
+    }
+]    
+```
+
+
 
 ## Pessoas
 
