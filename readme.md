@@ -139,8 +139,18 @@ Envie um valor positivo na propriedade value para realizar um depósito, ou envi
 ```
 
 ### Extratos
+Possibilidade de obter extrato com todas as transações de uma conta ou por um período de dias. </br>
+
+Extrato completo: </br>
 ```
 GET /api/v1/account/transaction/{accountId}
+```
+
+
+Extrato por período: </br>
+Para utilizar o extrato por período basta adicionar o parâmetro period na rota, se valor será a quantidade de dias do período. Por exemplo para obter as transações dos últimos 60 dias:
+```
+GET /api/v1/account/transaction/{accountId}?period=60
 ```
 
 **Response**
