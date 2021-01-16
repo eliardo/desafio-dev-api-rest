@@ -4,6 +4,15 @@
 npm install
 ```
 
+## Config
+Alterar credenciais do banco de dados no arquivo **/app/config/dbConfig.js**<br />
+    HOST: "database.host",<br />
+    PORT: "port",<br />
+    USER: "user",<br />
+    PASSWORD: "password",<br />
+    DB: "databasename"<br />
+
+
 ### Run
 ```
 node server.js
@@ -12,6 +21,15 @@ node server.js
 ### Descrição
 Serviço responsável por gerenciar contas, possibilitando criar contas, bloquear contas, realizar saques depósitos e obter extratos. <br />
 Atualmente possuí também as funcionalidades de criar pessoa e listar todas as pessoas (funcionalidade que deve ser removida para na causar dupla responsabilidade)
+
+**Funcionalidades**
+* Realiza a criação de uma conta;<br />
+* Realiza operação de consulta de saldo em determinada conta;<br />
+* Realiza operação de depósito em uma conta;<br />
+* Realiza operação de saque em uma conta;<br />
+* Realiza o bloqueio/reativa de uma conta;<br />
+* Recupera o extrato de transações de uma conta;<br />
+
 
 ## Swagger
 Swagger implementado e disponível em /index<br />
@@ -180,5 +198,6 @@ GET /api/v1/user
 
 ### Banco de dados
 Banco de dados utilizado é foi MYSQL.
+Configurações do banco de dados devem ser adicionadas no arquivo aap/config/dbconfig.js
 
 **Scripts de criação de tabelas disponível em app/scripts/db.sql**
