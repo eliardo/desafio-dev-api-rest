@@ -1,11 +1,12 @@
 const User = require("../models/userModel.js");
 
 // cria um novo usuário na base de dados
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
     if (!req.body || (!req.body.name || !req.body.cpf || !req.body.birthday) ) {
         res.status(400).send({
             message: "VERIFIQUE OS DADOS INFORMADOS!!"
         });
+        return;
     }
 
     const user = new User({
@@ -14,25 +15,26 @@ exports.create = (req, res) => {
         birthday: req.body.birthday
     });
 
-    User.create(user, (error, data) => {
-        if (error)
-            res.status(500).send({
-                message:
-                error.message || "ERRO AO TENTAR CRIAR O USUÁRIO."
-            });
-        else res.status(201).send(data);
-    });
+    try {
+        const response = await user.create();
+        res.status(201).send(response);
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "ERRO AO TENTAR CRIAR O USUÁRIO."
+        });
+    }
+
 };
 
 // busca todos os usuários cadastrados
-exports.findAll = (req, res) => {
-    User.getAll((error, data) => {
-        if (error)
-            res.status(500).send({
-                message:
-                error.message || "ERRO AO BUSCAR TODOS OS USUÁRIOS."
-            });
-        else res.status(200).send(data);
-    });
+exports.findAll = async (req, res) => {
+    try {
+        const users = await User.getAll();    
+        res.status(200).send(users);
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "ERRO AO BUSCAR TODOS OS USUÁRIOS."
+        });
+    }
 };
 

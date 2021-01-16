@@ -218,8 +218,97 @@
                     }
                 }
             }
+        },
+        "/account/transaction": {
+            "post": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Create a transaction credit/debit",
+                "parameters": [
+                    {
+                        "name": "transaction",
+                        "in": "body",
+                        "description": "Id of the account",
+                        "schema": {
+                            "$ref": "#/definitions/CreateTransaction"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction OK",
+                        "schema": {
+                            "$ref": "#/definitions/BalanceAndAccountId"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Account not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Generic Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/account/transaction/{accountId}": {
+            "parameters": [
+                {
+                    "name": "accountId",
+                    "in": "path",
+                    "required": true,
+                    "description": "AccountId of account that we want to get the resume",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Get transactions of given account",
+                "responses": {
+                    "200": {
+                        "description": "Transactions",
+                        "schema": {
+                            "$ref": "#/definitions/Resumes"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "404": {
+                        "description": "Account not found",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Generic Error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
         }
     },
+
+
     "definitions": {
         "Account": {
             "required": [
@@ -288,6 +377,17 @@
         },
         "Balance": {
             "properties": {
+                "balance": {
+                    "type": "integer",
+                    "format": "double"
+                }
+            }
+        },
+        "BalanceAndAccountId": {
+            "properties": {
+                "accountId": {
+                    "type": "integer"
+                },
                 "balance": {
                     "type": "integer",
                     "format": "double"
@@ -363,6 +463,41 @@
                     "type": "string"
                 }
             }
+        },
+        "CreateTransaction": {
+            "required": [
+                "accountId",
+                "value"
+            ],
+            "properties": {
+                "accountId": {
+                    "type": "integer"
+                },
+                "value": {
+                    "type": "integer"
+                }
+            }
+        },
+        "Resume": {
+            "properties": {
+                "transactionId": {
+                    "type": "integer"
+                },
+                "accountId": {
+                    "type": "integer"
+                },
+                "value": {
+                    "type": "integer"
+                },
+                "transactionDate": {
+                    "type": "string",
+                    "format": "date"
+                }
+            }
+        },
+        "Resumes": {
+            "type": "array",
+            "$ref": "#/definitions/Resume"
         }
     }
 }

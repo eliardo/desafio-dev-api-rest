@@ -7,30 +7,50 @@ class User {
         this.birthday = user.birthday;
     }
 
-    create = (newUser, result) => {
-        sql.query("INSERT INTO Users SET ?", newUser, (err, res) => {
-            if (err) {
-                console.log("error: ", err);
-                result(err, null);
-                return;
-            }
-            console.log("created user: ", { id: res.insertId, ...newUser });
-            result(null, { id: res.insertId, ...newUser });
+    create(){
+        return new Promise((resolve, reject) => {
+            sql.query("INSERT INTO Users SET ?", this, (err, res) => {
+                if (err) {
+                    reject(err.message);
+                }
+                console.log("created user: ", { id: res.insertId, ...this });
+                resolve({ id: res.insertId, ...this });
+            });
         });
     }
 
-    getAll = result => {
-        sql.query("SELECT * FROM Users", (err, res) => {
-            if (err) {
-                console.log("error: ", err);
-                result(null, err);
-                return;
-            }
-            console.log("Users: ", res);
-            result(null, res);
+    static getAll(){
+        return new Promise((resolve, reject) => {
+            sql.query("SELECT * FROM Users", (err, res) => {
+                if (err) {
+                    reject(err.message);
+                }
+                console.log("Users: ", res);
+                resolve(res);
+            });
         });
     }
 
+    static async userExists(userId) {
+        try {
+            const user = await User.getOne(userId) 
+            return user[0].userId == userId;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    static getOne(userId){
+        return new Promise((resolve, reject) => {
+            sql.query(`SELECT * FROM Users WHERE userId = ${userId}`, (err, res) => {
+                if (err) {
+                    reject(err.message);
+                }
+                console.log("User: ", res);
+                resolve(res);
+            });
+        });
+    }
 }
 
 module.exports = User;

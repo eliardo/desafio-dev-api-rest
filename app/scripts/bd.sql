@@ -26,3 +26,9 @@ CREATE TABLE Transactions (
     PRIMARY KEY (transactionId),
     FOREIGN KEY (accountId) REFERENCES Accounts(accountId)
 );
+
+--SCRIPT PARA ADICIONAR UMA "pessoa" ao banco de dados mysql
+INSERT INTO Users(name, cpf, birthday) VALUES ("Fulano Fulando", "02102102111", "1990/12/01")
+
+-- SCRIPT PARA LISTA "PESSOAS" DO BD
+SELECT * FROM Users
