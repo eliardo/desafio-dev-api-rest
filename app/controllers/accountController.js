@@ -67,8 +67,8 @@ exports.changeStatus = async (req, res) => {
 
 // transações saque e deposito
 exports.transaction = async (req, res) => {
-    const { accountId, value} = req.body;
-    console.log(accountId);
+    const { accountId, value } = req.body;
+
     if (value == 0) {
         res.status(400).send({ message: "DEPOSITOS/SAQUES COM VALOR 0 NÃO SÃO VÁLIDOS" });
         return;
@@ -76,7 +76,7 @@ exports.transaction = async (req, res) => {
 
     try {
         const account = await Account.getAccountById(accountId);
-        
+
         if (!account) {
             res.status(400).send({ message: `NÃO ENCONTRAMOS A CONTA COM ID ${req.body.accountId}.` });
             return;
@@ -87,7 +87,7 @@ exports.transaction = async (req, res) => {
             depositProcess(account, value, req, res);
         } else {
             //saque
-            retireProcess(account, value, req, res);
+            withdrawProcess(account, value, req, res);
         }
     } catch (error) {
         res.status(404).send({
@@ -112,24 +112,40 @@ depositProcess = async (account, value, req, res) => {
 }
 
 
-retireProcess = async (account, value, req, res) => {
-    //todo testar saques diarios e active
-    if (account.balance >= (value * -1)) {
-        const newBalance = account.balance + (value);
-        try {
-            changedBalance = await Account.updateBalance(account.accountId, newBalance);
-            createTransaction(account.accountId, value);
-            res.status(200).send(changedBalance);
-            return;
-        } catch (error) {
-            res.status(500).send({ message: `ERRO AO TENTAR EFETUAR SAQUE NA CONTA ${account.accountId}.` });
-            return;
-        }
-    } else {
-        res.status(200).send({ message: "SAQUE NÃO REALIZADO, SALDO INSUFICIENTE." });
+withdrawProcess = async (account, value, req, res) => {
+    if (!account.active) {
+        res.status(200).send({ message: "SAQUE NÃO REALIZADO, CONTA BLOQUEADA/DESATIVADA." });
+        return;
     }
+
+    if (account.balance < (value * -1)) {
+        res.status(200).send({ message: "SAQUE NÃO REALIZADO, SALDO INSUFICIENTE." });
+        return;
+    }
+
+    const limitExceeded = await checkLimitDaily(account.accountId, account.dailyLimit, value * -1);
+    if (limitExceeded) {
+        res.status(200).send({ message: "SAQUE NÃO REALIZADO, SAQUE EXCEDE O LIMITE DIARIO." });
+        return;
+    }
+
+    const newBalance = account.balance + (value);
+    try {
+        changedBalance = await Account.updateBalance(account.accountId, newBalance);
+        createTransaction(account.accountId, value);
+        res.status(200).send(changedBalance);
+        return;
+    } catch (error) {
+        res.status(500).send({ message: `ERRO AO TENTAR EFETUAR SAQUE NA CONTA ${account.accountId}.` });
+        return;
+    }
+
 }
 
+checkLimitDaily = async (accountId, dailyLimit, valueToGet) => {
+    const amountWithdrawDaily = await Transaction.getAmountWithdrawDaily(accountId);
+    return (amountWithdrawDaily * -1) + valueToGet > dailyLimit;
+}
 
 createTransaction = (accountId, value) => {
     const transaction = new Transaction({
@@ -140,14 +156,24 @@ createTransaction = (accountId, value) => {
     transaction.create()
 }
 
-exports.getAllTransactions = async (req, res) => {
-    try {
-        const transactions = await Transaction.findAllTransactions(req.params.accountId)
-        res.status(400).send(transactions);
-    } catch (error) {
-        res.status(500).send({ message: "ERRO AO TENTAR BUSCAR TRANSAÇÕES DA CONTA " + req.params.accountId });
-        return;
+exports.getTransactions = async (req, res) => {
+    //transações por perido de dias
+    if (req.query.period && !isNaN(req.query.period)) {
+        var  startDate = new Date();
+        startDate.setDate(startDate.getDate() - req.query.period);        
+        const transactions = await Transaction.findTransactions(req.params.accountId, startDate)
+        res.status(200).send(transactions);
+    } else {
+        //obter todas as transaçoes
+        try {
+            const transactions = await Transaction.findAllTransactions(req.params.accountId)
+            res.status(200).send(transactions);
+        } catch (error) {
+            res.status(500).send({ message: "ERRO AO TENTAR BUSCAR TRANSAÇÕES DA CONTA " + req.params.accountId });
+            return;
+        }
     }
+
 
 }
 

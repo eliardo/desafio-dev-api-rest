@@ -14,6 +14,6 @@ module.exports = app => {
     app.post("/api/v1/account/transaction", account.transactionRules(), account.accountValidate, account.transaction);
 
     //Transações (todos os extratos)
-    app.get("/api/v1/account/transaction/:accountId", account.getAllTransactions);
+    app.get("/api/v1/account/transaction/:accountId", account.getTransactions);
 
 };
